@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { rsvpAPI } from '../services/api'
-import './RSVPForm.css'
+import './RsvpForm.css'
 
 function RSVPForm({ onClose, onSubmit }) {
   const [formData, setFormData] = useState({
