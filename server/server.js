@@ -3,14 +3,15 @@ import cors from 'cors'
 import fs from 'fs/promises'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import dotenv from 'dotenv'
+dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
-// Middleware
 app.use(cors())
 app.use(express.json())
 
@@ -19,11 +20,6 @@ const RSVP_FILE = path.join(__dirname, 'rsvps.json')
 
 // Serve built frontend
 app.use(express.static(path.join(__dirname, 'public')))
-
-// SPA fallback: send index.html for any unknown route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
 
 // Initialize JSON file if it doesn't exist
 async function initializeRSVPFile() {
@@ -35,102 +31,35 @@ async function initializeRSVPFile() {
   }
 }
 
-// Read RSVPs from file
-async function readRSVPs() {
-  try {
-    const data = await fs.readFile(RSVP_FILE, 'utf-8')
-    return JSON.parse(data)
-  } catch (error) {
-    console.error('Error reading RSVPs:', error)
-    return []
-  }
-}
+// Read / write helpers...
+async function readRSVPs() { /* unchanged */ }
+async function writeRSVPs(rsvps) { /* unchanged */ }
 
-// Write RSVPs to file
-async function writeRSVPs(rsvps) {
-  try {
-    await fs.writeFile(RSVP_FILE, JSON.stringify(rsvps, null, 2))
-    return true
-  } catch (error) {
-    console.error('Error writing RSVPs:', error)
-    return false
-  }
-}
+// API routes
+app.get('/api/rsvps', async (req, res) => { /* unchanged */ })
+app.post('/api/rsvps', async (req, res) => { /* unchanged */ })
+app.delete('/api/rsvps/:id', async (req, res) => { /* unchanged */ })
+app.get('/api/rsvps/stats', async (req, res) => { /* unchanged */ })
 
-// GET all RSVPs
-app.get('/api/rsvps', async (req, res) => {
-  const rsvps = await readRSVPs()
-  res.json(rsvps)
+app.post('/api/login', (req, res) => {
+  const { password } = req.body
+  const correct = process.env.PASSWORD
+
+  if (!password || password !== correct) {
+    return res.status(401).json({ success: false, message: 'Incorrect password' })
+  }
+
+  return res.json({ success: true })
 })
 
-// POST new RSVP
-app.post('/api/rsvps', async (req, res) => {
-  const { name, username, bringing, connection } = req.body
-  
-  if (!name && !username) {
-    return res.status(400).json({ error: 'Name or username required' })
-  }
-  
-  const rsvps = await readRSVPs()
-  
-  const newRSVP = {
-    id: Date.now(),
-    name,
-    username,
-    bringing,
-    connection,
-    timestamp: new Date().toISOString()
-  }
-  
-  rsvps.push(newRSVP)
-  
-  const success = await writeRSVPs(rsvps)
-  
-  if (success) {
-    res.status(201).json(newRSVP)
-  } else {
-    res.status(500).json({ error: 'Failed to save RSVP' })
-  }
-})
-
-// DELETE RSVP by ID
-app.delete('/api/rsvps/:id', async (req, res) => {
-  const id = parseInt(req.params.id)
-  const rsvps = await readRSVPs()
-  
-  const filteredRSVPs = rsvps.filter(rsvp => rsvp.id !== id)
-  
-  if (filteredRSVPs.length === rsvps.length) {
-    return res.status(404).json({ error: 'RSVP not found' })
-  }
-  
-  const success = await writeRSVPs(filteredRSVPs)
-  
-  if (success) {
-    res.json({ message: 'RSVP deleted' })
-  } else {
-    res.status(500).json({ error: 'Failed to delete RSVP' })
-  }
-})
-
-// GET RSVP stats
-app.get('/api/rsvps/stats', async (req, res) => {
-  const rsvps = await readRSVPs()
-  
-  const stats = {
-    total: rsvps.length,
-    wired: rsvps.filter(r => r.connection === 'wired').length,
-    wifi: rsvps.filter(r => r.connection === 'wifi').length,
-    withBringing: rsvps.filter(r => r.bringing && r.bringing.trim()).length
-  }
-  
-  res.json(stats)
+// SPA fallback *last*
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
 // Start server
 async function start() {
   await initializeRSVPFile()
-  
   app.listen(PORT, () => {
     console.log(`🔥 RSVP Server running on http://localhost:${PORT}`)
     console.log(`📁 Saving to: ${RSVP_FILE}`)

@@ -1,32 +1,40 @@
-import { useState } from 'react'
-import './LoginPage.css'
+import { useState } from "react";
+import "./LoginPage.css";
 
 function LoginPage({ onLogin }) {
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [isShaking, setIsShaking] = useState(false)
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isShaking, setIsShaking] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    
-    // Check password (you can change this to whatever you want)
-    const correctPassword = 'lanparty2025'
-    
-    if (password === correctPassword) {
-      // Save auth to localStorage
-      localStorage.setItem('isAuthenticated', 'true')
-      onLogin()
-    } else {
-      setError('Incorrect password')
-      setIsShaking(true)
-      setTimeout(() => setIsShaking(false), 500)
-      setPassword('')
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+
+      if (res.ok) {
+        localStorage.setItem("isAuthenticated", "true");
+        onLogin();
+      } else {
+        setError("Incorrect password");
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 500);
+        setPassword("");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Server error");
     }
-  }
+  };
 
   return (
     <div className="login-page">
-      <div className={`login-window ${isShaking ? 'shake' : ''}`}>
+      <div className={`login-window ${isShaking ? "shake" : ""}`}>
         {/* Title Bar */}
         <div className="login-title-bar">
           <span className="login-title">LAN Party - Login</span>
@@ -76,7 +84,7 @@ function LoginPage({ onLogin }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default LoginPage
+export default LoginPage;
