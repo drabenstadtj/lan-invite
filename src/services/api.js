@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001/api'
+const API_BASE_URL = '/api'
 
 export const rsvpAPI = {
   // Get all RSVPs
@@ -15,7 +15,7 @@ export const rsvpAPI = {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(rsvpData)
+      body: JSON.stringify(rsvpData),
     })
     if (!response.ok) throw new Error('Failed to create RSVP')
     return response.json()
@@ -24,7 +24,7 @@ export const rsvpAPI = {
   // Delete RSVP
   async deleteRSVP(id) {
     const response = await fetch(`${API_BASE_URL}/rsvps/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     })
     if (!response.ok) throw new Error('Failed to delete RSVP')
     return response.json()
@@ -35,5 +35,5 @@ export const rsvpAPI = {
     const response = await fetch(`${API_BASE_URL}/rsvps/stats`)
     if (!response.ok) throw new Error('Failed to fetch stats')
     return response.json()
-  }
+  },
 }
