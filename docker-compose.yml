@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  lan-invite:
+    build: .
+    container_name: lan-invite
+    restart: unless-stopped
+    environment:
+      # Server port inside the container (your server.js uses process.env.PORT || 3001)
+      PORT: 3001
+      # Login password
+      PASSWORD: ""
+    volumes:
+      # Persist RSVP data on the host
+      - ./server/rsvps.json:/app/server/rsvps.json
+    ports:
+      # host:container
+      - "3069:3001"
+    networks:
+      - reverse-proxy-network
+
+networks:
+  reverse-proxy-network:
+    external: true
