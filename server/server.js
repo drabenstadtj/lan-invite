@@ -13,17 +13,26 @@ const __dirname = path.dirname(__filename)
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// Middleware
 app.use(cors())
 app.use(express.json())
+
+// ---- simple request logger ----
+app.use((req, res, next) => {
+  const start = Date.now()
+  res.on('finish', () => {
+    const ms = Date.now() - start
+    console.log(
+      `[${new Date().toISOString()}] ${req.method} ${req.url} -> ${res.statusCode} (${ms}ms)`
+    )
+  })
+  next()
+})
 
 // Path to JSON file
 const RSVP_FILE = path.join(__dirname, 'rsvps.json')
 
-// Serve built frontend (Vite build copied here by Dockerfile)
+// Serve built frontend
 app.use(express.static(path.join(__dirname, 'public')))
-
-// ---------- File helpers ----------
 
 // Initialize JSON file if it doesn't exist
 async function initializeRSVPFile() {
@@ -67,9 +76,12 @@ app.get('/api/rsvps', async (req, res) => {
 
 // POST new RSVP
 app.post('/api/rsvps', async (req, res) => {
+  console.log('Incoming RSVP payload:', req.body)
+
   const { name, username, bringing, connection } = req.body
 
   if (!name && !username) {
+    console.warn('Rejected RSVP: missing name/username')
     return res.status(400).json({ error: 'Name or username required' })
   }
 
@@ -89,8 +101,10 @@ app.post('/api/rsvps', async (req, res) => {
   const success = await writeRSVPs(rsvps)
 
   if (success) {
+    console.log('RSVP saved:', newRSVP)
     res.status(201).json(newRSVP)
   } else {
+    console.error('Failed to save RSVP to file')
     res.status(500).json({ error: 'Failed to save RSVP' })
   }
 })
@@ -98,19 +112,23 @@ app.post('/api/rsvps', async (req, res) => {
 // DELETE RSVP by ID
 app.delete('/api/rsvps/:id', async (req, res) => {
   const id = parseInt(req.params.id)
-  const rsvps = await readRSVPs()
+  console.log('Delete RSVP request for id:', id)
 
+  const rsvps = await readRSVPs()
   const filteredRSVPs = rsvps.filter(rsvp => rsvp.id !== id)
 
   if (filteredRSVPs.length === rsvps.length) {
+    console.warn('Delete failed: RSVP not found for id', id)
     return res.status(404).json({ error: 'RSVP not found' })
   }
 
   const success = await writeRSVPs(filteredRSVPs)
 
   if (success) {
+    console.log('RSVP deleted:', id)
     res.json({ message: 'RSVP deleted' })
   } else {
+    console.error('Failed to delete RSVP from file')
     res.status(500).json({ error: 'Failed to delete RSVP' })
   }
 })
@@ -126,6 +144,7 @@ app.get('/api/rsvps/stats', async (req, res) => {
     withBringing: rsvps.filter(r => r.bringing && r.bringing.trim()).length
   }
 
+  console.log('RSVP stats:', stats)
   res.json(stats)
 })
 
@@ -134,19 +153,23 @@ app.post('/api/login', (req, res) => {
   const { password } = req.body
   const correct = process.env.PASSWORD
 
+  console.log('Login attempt')
+
   if (!password || password !== correct) {
+    console.warn('Login failed: incorrect password')
     return res.status(401).json({ success: false, message: 'Incorrect password' })
   }
 
+  console.log('Login successful')
   return res.json({ success: true })
 })
 
-// ---------- SPA fallback (MUST be last) ----------
+// SPA fallback (must be last)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
-// ---------- Start server ----------
+// Start server
 async function start() {
   await initializeRSVPFile()
 
