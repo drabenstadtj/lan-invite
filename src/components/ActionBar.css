@@ -1,0 +1,90 @@
+.action-bar {
+  background: linear-gradient(to bottom, #3d5466 0%, #2b3e50 100%);
+  padding: 6px;
+  display: flex;
+  gap: 4px;
+  border-top: 1px solid #4a5f73;
+  flex-wrap: nowrap;
+}
+
+.action-btn {
+  background: linear-gradient(to bottom, #4a5f73 0%, #3d4f63 100%);
+  border: 2px outset #5a7083;
+  border-radius: 0;
+  color: white;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+}
+
+.action-btn:active {
+  border-style: inset;
+  background: linear-gradient(to bottom, #3d4f63 0%, #4a5f73 100%);
+}
+
+.rsvp-btn {
+  background: linear-gradient(to bottom, #d9534f 0%, #c9302c 100%);
+  border-color: #e9736f;
+  font-weight: bold;
+  flex: 2;
+  white-space: nowrap;
+}
+
+.rsvp-btn:hover {
+  background: linear-gradient(to bottom, #e9736f 0%, #d9534f 100%);
+}
+
+/* Make icon-only buttons smaller */
+.action-btn:not(.rsvp-btn) {
+  flex: 0 0 auto;
+  min-width: 40px;
+  padding: 6px 8px;
+}
+
+
+
+/* Icon styles */
+.btn-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.action-btn .btn-icon {
+  width: 28px;
+  height: 28px;
+  font-style: normal;
+}
+
+/* Custom icon backgrounds */
+.speech-icon {
+  background-image: url("/images/98envelope.png");
+  font-size: 0;
+}
+
+.camera-icon {
+  background-image: url("/images/98folder.png");
+  font-size: 0;
+}
+
+.controller-icon {
+  background-image: url("/images/98gaming.png");
+  font-size: 0;
+}
+
+
+.action-btn:hover {
+  background: linear-gradient(to bottom, #3d4f63 0%, #2d3e53 100%);
+}
+
+.rsvp-btn:hover {
+  background: linear-gradient(to bottom, #c9302c 0%, #b9201c 100%);
+}

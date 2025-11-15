@@ -1,0 +1,14 @@
+.status-bar {
+  background: linear-gradient(to bottom, #4a6b8a 0%, #2d4a61 100%);
+  padding: 6px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #5a7b9a;
+  border-bottom: 1px solid #1d3a51;
+}
+
+.username {
+  color: white;
+  font-weight: bold;
+}

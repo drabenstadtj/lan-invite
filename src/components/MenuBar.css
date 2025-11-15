@@ -1,0 +1,17 @@
+.menu-bar {
+  background: linear-gradient(to bottom, #3d5466 0%, #2b3e50 100%);
+  padding: 4px 10px;
+  display: flex;
+  gap: 15px;
+  border-bottom: 1px solid #1a2530;
+  font-size: 11px;
+  color: #ccc;
+}
+
+.menu-bar span {
+  cursor: pointer;
+}
+
+.menu-bar span:hover {
+  color: white;
+}

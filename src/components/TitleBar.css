@@ -1,0 +1,42 @@
+.title-bar {
+  background: linear-gradient(to bottom, #8b1538 0%, #5a0d23 100%);
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #3a0d1a;
+  cursor: grab;
+  touch-action: none;
+}
+
+.title-bar:active {
+  cursor: grabbing;
+}
+
+.logo-text {
+  color: white;
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.window-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.window-controls button {
+  background: #2a2a2a;
+  border: 1px outset #444;
+  border-radius: 0;
+  color: white;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.window-controls button:active {
+  border-style: inset;
+}

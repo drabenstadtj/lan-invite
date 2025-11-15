@@ -1,0 +1,124 @@
+.notification-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.notification-window {
+  width: 320px;
+  background: #2b3e50;
+  border: 2px outset #4a5f73;
+  border-radius: 0;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Title Bar */
+.notification-title-bar {
+  background: linear-gradient(to bottom, #4a6b8a 0%, #2d4a61 100%);
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1d3a51;
+}
+
+.notification-window.success .notification-title-bar {
+  background: linear-gradient(to bottom, #5cb85c 0%, #449d44 100%);
+}
+
+.notification-title {
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.notification-close {
+  background: #2a2a2a;
+  border: 1px outset #444;
+  border-radius: 0;
+  color: white;
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.notification-close:active {
+  border-style: inset;
+}
+
+/* Content */
+.notification-content {
+  padding: 30px 20px;
+  background: #34495e;
+  text-align: center;
+}
+
+.notification-content p {
+  color: #fff;
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Footer */
+.notification-footer {
+  padding: 15px 20px;
+  background: #2b3e50;
+  text-align: center;
+  border-top: 1px solid #1d3a51;
+}
+
+.notification-btn {
+  background: linear-gradient(to bottom, #4a5f73 0%, #3d4f63 100%);
+  border: 2px outset #5a7083;
+  border-radius: 0;
+  color: white;
+  padding: 8px 30px;
+  font-size: 11px;
+  font-weight: bold;
+  font-family: Tahoma, Verdana, sans-serif;
+  cursor: pointer;
+  min-width: 80px;
+}
+
+.notification-btn:hover {
+  background: linear-gradient(to bottom, #5a7083 0%, #4a5f73 100%);
+}
+
+.notification-btn:active {
+  border-style: inset;
+  background: linear-gradient(to bottom, #3d4f63 0%, #4a5f73 100%);
+}
